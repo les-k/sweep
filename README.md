@@ -112,9 +112,12 @@ the marker tells `sweep` which one it's looking at, so the report says
 
 Two more guarantees worth stating:
 
-- **Symlinks and Windows junctions are never followed** — not when walking, not
-  when adding up sizes. A link inside a cache can't lead `sweep` out into the
-  rest of your filesystem.
+- **Links are never followed, and never counted.** Not when walking, not when
+  adding up sizes. A symlink inside a cache can't lead `sweep` out into the rest
+  of your filesystem, and it isn't reported as reclaimable space either — deleting
+  a link frees nothing. Windows junctions get the same treatment on Python 3.12+,
+  where `os.path.isjunction` makes them detectable; on older interpreters only
+  symlinks are recognised.
 - **`.git`, `.hg`, and `.svn` are never entered.** Your history is not a build
   artifact.
 
@@ -241,7 +244,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-75 tests, 88% coverage. CI runs the suite on Python 3.9–3.13 on Linux, plus
+76 tests, 87% coverage. CI runs the suite on Python 3.9–3.13 on Linux, plus
 Windows and macOS, and checks lint and formatting with `ruff`.
 
 The tests build real directory trees on disk rather than mocking the filesystem —

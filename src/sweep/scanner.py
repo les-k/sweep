@@ -71,6 +71,36 @@ class ScanResult:
         return sum(find.files for find in self.finds)
 
 
+# os.path.isjunction arrived in 3.12. On older interpreters a Windows junction
+# is indistinguishable from a real directory without dropping into ctypes, so we
+# degrade to "symlinks only" rather than pretend otherwise.
+_isjunction = getattr(os.path, "isjunction", None)
+
+
+def _is_link(entry: os.DirEntry) -> bool:
+    """True for anything that points elsewhere: a symlink or a Windows junction.
+
+    Links are skipped everywhere - we neither walk through them nor count them.
+    Following one would let a link inside a cache drag the scan out into the
+    rest of the filesystem, and a link's own size is not space you get back by
+    deleting it.
+
+    Anything that raises while being inspected is treated as a link, because
+    refusing to touch it is the safe way to be wrong.
+    """
+    try:
+        if entry.is_symlink():
+            return True
+    except OSError:
+        return True
+    if _isjunction is not None:
+        try:
+            return _isjunction(entry.path)
+        except OSError:
+            return True
+    return False
+
+
 def _is_excluded(path: Path, patterns: Sequence[str]) -> bool:
     if not patterns:
         return False
@@ -119,7 +149,7 @@ def walk(
 
         for entry in entries:
             try:
-                if not entry.is_dir(follow_symlinks=False):
+                if _is_link(entry) or not entry.is_dir(follow_symlinks=False):
                     continue
             except OSError:
                 continue
@@ -159,6 +189,8 @@ def measure(find: Find) -> Find:
             with os.scandir(current) as it:
                 for entry in it:
                     try:
+                        if _is_link(entry):
+                            continue
                         if entry.is_dir(follow_symlinks=False):
                             stack.append(Path(entry.path))
                         else:

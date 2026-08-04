@@ -78,7 +78,24 @@ class TestMeasure:
 
         find = next(f for f in walk(tmp_path / "proj"))
         measure(find)
-        assert find.size == 0  # the 5000 bytes behind the link are not counted
+
+        # Neither the 5000 bytes behind the link nor the link's own inode count:
+        # deleting a symlink reclaims nothing, so reporting it as space would lie.
+        assert find.size == 0
+        assert find.files == 0
+        assert (outside).exists()  # and the target is still there afterwards
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX symlinks require privileges on Windows")
+    def test_does_not_walk_through_a_symlinked_directory(self, tmp_path: Path):
+        """A link pointing at a real project must not produce a find."""
+        real = tmp_path / "elsewhere"
+        write(real / "package.json", 2)
+        write(real / "node_modules" / "dep.js", 100)
+
+        (tmp_path / "proj").mkdir()
+        (tmp_path / "proj" / "linked").symlink_to(real, target_is_directory=True)
+
+        assert list(walk(tmp_path / "proj")) == []
 
 
 class TestScan:
