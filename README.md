@@ -1,6 +1,6 @@
 # sweep
 
-[![CI](https://github.com/lesliekadenge/sweep/actions/workflows/ci.yml/badge.svg)](https://github.com/lesliekadenge/sweep/actions/workflows/ci.yml)
+[![CI](https://github.com/les-k/sweep/actions/workflows/ci.yml/badge.svg)](https://github.com/les-k/sweep/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.9%20%E2%80%93%203.13-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -51,13 +51,13 @@ Happy with the list? Add `--delete`.
 Requires Python 3.9+.
 
 ```bash
-pipx install git+https://github.com/lesliekadenge/sweep.git
+pipx install git+https://github.com/les-k/sweep.git
 ```
 
 Or with plain pip:
 
 ```bash
-pip install git+https://github.com/lesliekadenge/sweep.git
+pip install git+https://github.com/les-k/sweep.git
 ```
 
 ## Usage
@@ -234,7 +234,7 @@ the bottom of the summary rather than silently dropped.
 ## Development
 
 ```bash
-git clone https://github.com/lesliekadenge/sweep.git
+git clone https://github.com/les-k/sweep.git
 cd sweep
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
