@@ -4,10 +4,28 @@
 [![Python](https://img.shields.io/badge/python-3.9%20%E2%80%93%203.13-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-Find and reclaim the disk space your projects are quietly sitting on — `node_modules`,
-`.venv`, `target/`, `__pycache__` and friends — without touching anything you actually wrote.
+**A command-line tool that finds wasted disk space on a developer's machine and
+offers to delete it — without ever touching work that can't be replaced.**
 
-No dependencies. One file to read per concept. Reports by default; deletes only when asked.
+Every software project leaves behind folders of downloaded libraries and build
+output. A single JavaScript project's `node_modules` routinely runs 200 MB–1 GB.
+Do a year of side projects and you're tens of gigabytes down, spread across
+folders you've forgotten.
+
+All of it is *regenerable* — delete it, run one command, and it comes back. The
+difficulty is telling that apart from your actual work, because a folder called
+`build` might be either.
+
+No dependencies. Reports by default; deletes only when asked.
+
+### What it demonstrates
+
+| | |
+|---|---|
+| **Safety-critical design** | A tool that deletes files has to be right. It only removes a folder when it can *prove* something on disk can rebuild it |
+| **Cross-platform correctness** | Windows, macOS and Linux differ in ways that matter here — symlinks, junctions, read-only files. Tested on all three |
+| **Real test coverage** | 75 tests against actual directory trees, including deliberate decoys designed to trick it |
+| **CI** | Every push runs the suite on 3 operating systems and 5 Python versions |
 
 ---
 
@@ -95,11 +113,10 @@ only if `package.json` is its sibling — that file *is* the receipt proving
 
 The consequence is the useful bit:
 
-```
 code/portfolio/                    code/notes/
   package.json      <- receipt       target/           <- no receipt
   node_modules/     RECLAIMED          research.md     LEFT ALONE
-```
+
 
 A `target/` directory you created by hand to hold your own files has no
 `Cargo.toml` beside it, so `sweep` doesn't recognise it and doesn't touch it.
@@ -127,7 +144,7 @@ the exact command that brings it back.
 ## What it knows about
 
 | Kind | Matches | Proof required | Comes back with |
-|---|---|---|---|
+|---|--- |--- | --- |
 | `node-modules` | `node_modules` | `package.json` | `npm install` |
 | `venv` | `.venv`, `venv` | `pyproject.toml`, `requirements.txt`, … | `pip install -e .` |
 | `rust-target` | `target` | `Cargo.toml` | `cargo build` |
