@@ -10,7 +10,7 @@ The public surface is deliberately small:
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from .scanner import Find, ScanResult, delete, scan, walk  # noqa: E402
 from .targets import TARGETS, Target  # noqa: E402
