@@ -78,6 +78,11 @@ Or with plain pip:
 pip install git+https://github.com/les-k/sweep.git
 ```
 
+Not `pip install sweep-cli` -- that name on PyPI belongs to an unrelated
+project by a different author. This one publishes as **`sweep-reclaim`**, and
+anything that depends on it should name it that way or pin to this repository
+directly, not to the bare name `sweep-cli`.
+
 ## Usage
 
 ```bash
