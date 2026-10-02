@@ -69,19 +69,19 @@ Happy with the list? Add `--delete`.
 Requires Python 3.9+.
 
 ```bash
-pipx install git+https://github.com/les-k/sweep.git
+pipx install sweep-reclaim
 ```
 
 Or with plain pip:
 
 ```bash
-pip install git+https://github.com/les-k/sweep.git
+pip install sweep-reclaim
 ```
 
 Not `pip install sweep-cli` -- that name on PyPI belongs to an unrelated
 project by a different author. This one publishes as **`sweep-reclaim`**, and
-anything that depends on it should name it that way or pin to this repository
-directly, not to the bare name `sweep-cli`.
+anything that depends on it should name it that way, not the bare name
+`sweep-cli`.
 
 ## Usage
 
